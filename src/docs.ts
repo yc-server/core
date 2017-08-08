@@ -1,5 +1,10 @@
 import * as lodash from 'lodash';
 
+export interface IResultOptions {
+  select?: string;
+  exclude?: string;
+}
+
 export class DocSchema {
   constructor(private model) {}
 
@@ -9,6 +14,33 @@ export class DocSchema {
         docs: this.result,
       },
     });
+  }
+
+  public paginateResultWithOptions(options: IResultOptions) {
+    return lodash.merge(PAGINATE_RESULT, {
+      properties: {
+        docs: this.resultWithOptions(options),
+      },
+    });
+  }
+
+  public resultWithOptions(options: IResultOptions) {
+    const result = this.result;
+    const properties = result.properties;
+    if (typeof options.select === 'string') {
+      result.properties = {};
+      for (const k of options.select.split(' ')) {
+        if (k) result.properties[k] = properties[k];
+      }
+      return result;
+    }
+    if (typeof options.exclude === 'string') {
+      for (const k of options.exclude.split(' ')) {
+        if (k) delete result.properties[k];
+      }
+      return result;
+    }
+    return result;
   }
 
   get result() {
