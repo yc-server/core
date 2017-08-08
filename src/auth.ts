@@ -1,0 +1,310 @@
+import * as boom from 'boom';
+import * as crypto from 'crypto';
+import * as jwt from 'jsonwebtoken';
+import * as compose from 'koa-compose';
+import * as lodash from 'lodash';
+import * as mongoose from 'mongoose';
+import * as uniqueValidator from 'mongoose-unique-validator';
+import { Ycs } from './app';
+import { IContext } from './context';
+import { handleError } from './errors';
+
+export async function setup(app: Ycs) {
+  AuthSchema = new mongoose.Schema(
+    {
+      password: {
+        type: String,
+        required() {
+          if (!this.providers || !this.providers.length) return true;
+          return false;
+        },
+        validate: {
+          validator(v) {
+            if (this.providers && this.providers.length) return true;
+            return v.length;
+          },
+          message: app.config.auth.messages.errors.empty_password,
+        },
+      },
+      providers: [
+        {
+          name: {
+            required: true,
+            type: String,
+          },
+          openid: String,
+        },
+      ],
+      roles: {
+        type: [String],
+        default: app.config.auth.defaultRoles,
+      },
+      salt: {
+        required: true,
+        type: String,
+      },
+      username: {
+        lowercase: true,
+        required() {
+          if (!this.providers || !this.providers.length) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        type: String,
+        unique: true,
+        uniqueCaseInsensitive: true,
+        validate: {
+          validator(v) {
+            if (this.providers && this.providers.length) return true;
+            return v.length;
+          },
+          message: app.config.auth.messages.errors.empty_username,
+        },
+      },
+    },
+    { timestamps: {} }
+  ).plugin(uniqueValidator, {
+    mesages: app.config.auth.messages.errors.username_already_in_use,
+  });
+
+  AuthSchema['options'].toJSON = {
+    transform(doc, ret, options) {
+      delete ret.password;
+      delete ret.salt;
+      return ret;
+    },
+  };
+  /**
+   * Pre-save hook
+   */
+  AuthSchema.pre('validate', async function(next) {
+    // Handle new/update passwords
+    if (!this.isModified('password')) return next();
+
+    // Password must not be empty if there is no any providers
+    if (!this.password || !this.password.length) {
+      if (!this.providers || !this.providers.length)
+        return next(
+          boom.badData(app.config.auth.messages.errors.invalid_password)
+        );
+      return next();
+    }
+
+    // Make salt
+    try {
+      this.salt = await this.makeSalt();
+      const hashedPassword = await this.encryptPassword(this.password);
+      this.password = hashedPassword;
+      next();
+    } catch (e) {
+      next(e);
+    }
+  });
+
+  /**
+   * Methods
+   */
+  AuthSchema.methods = {
+    /**
+     * Authenticate - check if the passwords are the same
+     *
+     * @param {String} password
+     * @return {Boolean}
+     * @api public
+     */
+    async authenticate(password): Promise<boolean> {
+      const pwdGen = await this.encryptPassword(password);
+      return this.password === pwdGen;
+    },
+
+    /**
+     * Make salt
+     *
+     * @param {Number} byteSize Optional salt byte size, default to 16
+     * @return {String}
+     * @api public
+     */
+    makeSalt(byteSize: number = 16): Promise<any> {
+      return new Promise((resolve, reject) => {
+        crypto.randomBytes(byteSize, (err, salt) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(salt.toString('base64'));
+          }
+        });
+      });
+    },
+
+    /**
+     * Encrypt password
+     *
+     * @param {String} password
+     * @return {String}
+     * @api public
+     */
+    encryptPassword(password): Promise<string> {
+      return new Promise((resolve, reject) => {
+        if (!password || !this.salt)
+          reject(new Error('Missing password or salt'));
+        const defaultIterations = 10000;
+        const defaultKeyLength = 64;
+        const salt = new Buffer(this.salt, 'base64');
+        return crypto.pbkdf2(
+          password,
+          salt,
+          defaultIterations,
+          defaultKeyLength,
+          'sha256',
+          (err, key) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(key.toString('base64'));
+            }
+          }
+        );
+      });
+    },
+  };
+
+  AuthModel = mongoose.model('__auth', AuthSchema);
+
+  signToken = (doc: mongoose.Document, options: jwt.SignOptions) => {
+    return jwt.sign(
+      {
+        _id: doc._id,
+        providers: doc['providers'],
+        roles: doc['roles'],
+      },
+      app.config.auth.secret,
+      options
+    );
+  };
+
+  verifyToken = (token: string) => {
+    if (!token) return null;
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, app.config.auth.secret, (error, decoded) => {
+        if (error) return resolve(null);
+        resolve(decoded);
+      });
+    });
+  };
+
+  isAuthenticated = () => {
+    return async (ctx: IContext, next) => {
+      try {
+        if (!ctx.request.auth)
+          throw boom.unauthorized(app.config.auth.messages.errors.unauthorized);
+        const auth = await AuthModel.findById(ctx.request.auth._id).exec();
+        if (!auth)
+          throw boom.notAcceptable(
+            app.config.auth.messages.errors.invalid_token
+          );
+        await next();
+      } catch (e) {
+        handleError(ctx, e);
+      }
+    };
+  };
+
+  hasRoles = (...roles: string[]) => {
+    return compose([
+      isAuthenticated(),
+      async (ctx: IContext, next) => {
+        try {
+          for (const role of roles) {
+            if (!ctx.request.auth.roles.includes(role))
+              throw boom.forbidden(
+                app.config.auth.messages.errors.no_permission
+              );
+          }
+          await next();
+        } catch (e) {
+          handleError(ctx, e);
+        }
+      },
+    ]);
+  };
+
+  owns = model => {
+    return compose([
+      isAuthenticated(),
+      async (ctx: IContext, next) => {
+        try {
+          const entity = await model.findById(ctx.params.id, '__auth').exec();
+          if (!entity['__auth'].equals(ctx.request.auth._id))
+            throw boom.forbidden('');
+          ctx.request.auth.owns = true;
+          await next();
+        } catch (e) {
+          handleError(ctx, e);
+        }
+      },
+    ]);
+  };
+
+  ownsOrHasRoles = (model, ...roles) => {
+    return compose([
+      isAuthenticated(),
+      async (ctx: IContext, next) => {
+        try {
+          const entity = await model.findById(ctx.params.id, '__auth').exec();
+          if (entity['__auth'].equals(ctx.request.auth._id)) {
+            ctx.request.auth.owns = true;
+          } else {
+            for (const role of roles) {
+              if (!ctx.request.auth.roles.includes(role))
+                throw boom.forbidden(
+                  app.config.auth.messages.errors.no_permission
+                );
+            }
+          }
+          await next();
+        } catch (e) {
+          handleError(ctx, e);
+        }
+      },
+    ]);
+  };
+
+  app.use(async (ctx: IContext, next) => {
+    const token = getHeaderToken(ctx);
+    ctx.request.auth = await verifyToken(token);
+    await next();
+  });
+}
+
+export let AuthSchema: mongoose.Schema;
+
+export let AuthModel: mongoose.Model<mongoose.Document>;
+
+export let signToken: (
+  doc: mongoose.Document,
+  options: jwt.SignOptions
+) => string;
+
+export let verifyToken: (token: string) => Promise<any>;
+
+export function getHeaderToken(ctx: IContext): string {
+  if (
+    !ctx.headers.authorization ||
+    !ctx.headers.authorization.startsWith('Bearer ')
+  )
+    return null;
+  return ctx.headers.authorization.substring(7);
+}
+
+export let isAuthenticated: () => any;
+
+export let hasRoles: (...roles: string[]) => any;
+
+export let owns: (model: mongoose.PaginateModel<mongoose.Document>) => any;
+
+export let ownsOrHasRoles: (
+  model: mongoose.PaginateModel<mongoose.Document>,
+  ...roles: string[]
+) => any;
