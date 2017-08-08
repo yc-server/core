@@ -98,6 +98,10 @@ export async function setup(app: Ycs) {
   });
 
   app.use(docRouter.routes());
+
+  for (const s of app.config.statics) {
+    app.use(mount(s.endpoint, new koa().use(serve(s.path))));
+  }
 }
 
 export class Router {
