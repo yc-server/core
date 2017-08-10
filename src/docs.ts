@@ -87,7 +87,7 @@ export class DocSchema {
   }
 }
 
-export type IDocsAccept = 'application/xml' | 'application/json' | 'text/plain';
+export type IDocsAccept = 'application/xml' | 'application/json' | 'text/plain' | 'multipart/form-data';
 export type IDocsDataType =
   | 'integer'
   | 'number'
@@ -145,14 +145,14 @@ export interface IDocs {
   controller: (ctx: any) => Promise<any>;
   auth?: {
     type: 'isAuthenticated' | 'owns' | 'hasRoles' | 'ownsOrHasRoles';
-    roles?: [string];
+    roles?: string[];
   };
-  tags: [string];
+  tags: string[];
   summary?: string;
   description?: string;
-  consumes?: [IDocsAccept];
-  produces?: [IDocsAccept];
-  parameters?: [IDocsParameter];
+  consumes?: IDocsAccept[];
+  produces?: IDocsAccept[];
+  parameters?: IDocsParameter[];
   responses: {
     [index: string]: {
       description: string;
