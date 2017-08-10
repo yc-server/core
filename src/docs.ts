@@ -87,7 +87,11 @@ export class DocSchema {
   }
 }
 
-export type IDocsAccept = 'application/xml' | 'application/json' | 'text/plain' | 'multipart/form-data';
+export type IDocsAccept =
+  | 'application/xml'
+  | 'application/json'
+  | 'text/plain'
+  | 'multipart/form-data';
 export type IDocsDataType =
   | 'integer'
   | 'number'
