@@ -21,6 +21,7 @@ import { IContext } from './context';
 import { IModel } from './db';
 import { IDocs } from './docs';
 import { handleError } from './errors';
+import { routers as pluginRouters } from './plugins';
 import { response } from './response';
 
 export async function setup(app: Ycs) {
@@ -40,6 +41,11 @@ export async function setup(app: Ycs) {
   if (app.config.auth.enableSimpleAuth) {
     app.use(SimpleAuthRouter.routes());
     docs.push(SimpleAuthRouter);
+  }
+
+  for (const router of pluginRouters) {
+    app.use(router.routes());
+    docs.push(router);
   }
 
   const docsPath = path.join(app.config.root, 'docs', 'www');
