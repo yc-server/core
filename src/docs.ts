@@ -97,6 +97,7 @@ export type IDocsDataType =
   | 'number'
   | 'string'
   | 'boolean'
+  | 'file'
   | 'array'
   | 'object';
 export type IDocsDataFormat =
