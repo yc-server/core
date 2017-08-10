@@ -4,6 +4,9 @@ import * as moment from 'moment';
 import * as path from 'path';
 import { promisify } from 'typed-promisify';
 import { Ycs } from './app';
+import { Router } from './routers';
+
+export let routers: Router[] = [];
 
 export async function setup(app: Ycs, mode: 'pre' | 'post') {
   const pluginsDir = path.join(app.dir, 'plugins');
@@ -21,7 +24,12 @@ export async function setup(app: Ycs, mode: 'pre' | 'post') {
           fileName.length - 3
         )}/lib/index`);
         const fn = plugin.setup[mode];
-        fn && fn(app);
+        if (fn) {
+          const router: Router = await fn(app);
+          if (mode === 'pre' && router) {
+            routers.push(router);
+          }
+        }
       }
     }
   } catch (e) {

@@ -67,8 +67,8 @@ export class Ycs extends koa {
     this.use(etag());
 
     await setupAuth(this);
-    await setupRouters(this);
     await setupPlugins(this, 'pre');
+    await setupRouters(this);
     await setupHttp(this);
     await setupPlugins(this, 'post');
   }
