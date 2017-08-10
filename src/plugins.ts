@@ -25,10 +25,9 @@ export async function setup(app: Ycs, mode: 'pre' | 'post') {
         )}/lib/index`);
         const fn = plugin.setup[mode];
         if (fn) {
-          const router: Router = await fn(app);
-          if (mode === 'pre' && router) {
-            routers.push(router);
-          }
+          const pluginRouters: Router[] = await fn(app);
+          if (mode === 'pre' && pluginRouters && pluginRouters.length)
+            routers = routers.concat(pluginRouters);
         }
       }
     }
