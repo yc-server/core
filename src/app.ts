@@ -44,7 +44,6 @@ export class Ycs extends koa {
   }
 
   public async start() {
-    await setupPlugins(this, 'pre');
     await setupMongodb(this);
 
     this.use(logger());
@@ -69,7 +68,8 @@ export class Ycs extends koa {
 
     await setupAuth(this);
     await setupRouters(this);
-    await setupPlugins(this, 'post');
+    await setupPlugins(this, 'pre');
     await setupHttp(this);
+    await setupPlugins(this, 'post');
   }
 }

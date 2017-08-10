@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "boom": "^5.2.0",
+    "colors": "^1.1.2",
     "ejs": "^2.5.7",
     "js2xml": "^1.0.8",
     "jsonwebtoken": "^7.4.2",
