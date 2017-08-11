@@ -9,7 +9,7 @@ export class DocSchema {
   constructor(private model) {}
 
   get paginateResult() {
-    return lodash.merge(PAGINATE_RESULT, {
+    return lodash.merge({}, PAGINATE_RESULT, {
       properties: {
         docs: this.result,
       },
@@ -17,7 +17,7 @@ export class DocSchema {
   }
 
   public paginateResultWithOptions(options: IResultOptions) {
-    return lodash.merge(PAGINATE_RESULT, {
+    return lodash.merge({}, PAGINATE_RESULT, {
       properties: {
         docs: this.resultWithOptions(options),
       },
