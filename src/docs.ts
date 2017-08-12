@@ -38,9 +38,11 @@ export class DocSchema {
   get paginateResult(): IDocsDataTypeItem {
     if (!this.__paginateResult)
       this.__paginateResult = lodash.merge({}, PAGINATE_RESULT, {
-        docs: {
-          type: 'array',
-          items: lodash.merge({}, this.result, { xml: { name: 'item' } }),
+        properties: {
+          docs: {
+            type: 'array',
+            items: lodash.merge({}, this.result, { xml: { name: 'item' } }),
+          },
         },
       });
     return this.__paginateResult;
@@ -67,11 +69,13 @@ export class DocSchema {
     options: IResultOptions
   ): IDocsDataTypeItem => {
     return lodash.merge({}, PAGINATE_RESULT, {
-      docs: {
-        type: 'array',
-        items: lodash.merge({}, this.resultWithOptions(options), {
-          xml: { name: 'item' },
-        }),
+      properties: {
+        docs: {
+          type: 'array',
+          items: lodash.merge({}, this.resultWithOptions(options), {
+            xml: { name: 'item' },
+          }),
+        },
       },
     });
   };
