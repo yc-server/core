@@ -97,6 +97,10 @@
     "@types/koa-compose" "*"
     "@types/node" "*"
 
+"@types/lodash@^4.14.72":
+  version "4.14.72"
+  resolved "http://r.cnpmjs.org/@types/lodash/download/@types/lodash-4.14.72.tgz#f090cf6eb1fee1647a0efa1ebe18b0b78ed551c6"
+
 "@types/mongodb@*":
   version "2.2.9"
   resolved "http://r.cnpmjs.org/@types/mongodb/download/@types/mongodb-2.2.9.tgz#0dc823148103b7c943b16209f1899e33acd5faf6"
