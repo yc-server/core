@@ -14,32 +14,36 @@ export class DocSchema {
   private __paginateResult: IDocsDataTypeItem;
   private __body: IDocsParameter;
 
-  constructor(private model) { }
+  constructor(private model) {}
 
   get schema(): IDocsDataTypeItem {
-    if (!this.__schema)
-      this.__schema = model2Schema(this.model);
+    if (!this.__schema) this.__schema = model2Schema(this.model);
     return this.__schema;
   }
 
   get result(): IDocsDataTypeItem {
     if (!this.__result)
-      this.__result = lodash.merge({
-        properties: {
-          _id: { type: 'string' },
-          __v: { type: 'string' },
-        }
-      }, this.schema);
+      this.__result = lodash.merge(
+        {
+          properties: {
+            _id: { type: 'string' },
+            __v: { type: 'string' },
+          },
+        },
+        this.schema
+      );
     return this.__result;
   }
 
   get paginateResult(): IDocsDataTypeItem {
     if (!this.__paginateResult)
       this.__paginateResult = lodash.merge({}, PAGINATE_RESULT, {
-        docs: {
-          type: 'array',
-          items: lodash.merge({}, this.result, { xml: { name: 'item' } })
-        }
+        properties: {
+          docs: {
+            type: 'array',
+            items: lodash.merge({}, this.result, { xml: { name: 'item' } }),
+          },
+        },
       });
     return this.__paginateResult;
   }
@@ -59,16 +63,22 @@ export class DocSchema {
     }
     if (options.extras) lodash.merge(result.properties, options.extras);
     return result;
-  }
+  };
 
-  public paginateResultWithOptions = (options: IResultOptions): IDocsDataTypeItem => {
+  public paginateResultWithOptions = (
+    options: IResultOptions
+  ): IDocsDataTypeItem => {
     return lodash.merge({}, PAGINATE_RESULT, {
-      docs: {
-        type: 'array',
-        items: lodash.merge({}, this.resultWithOptions(options), { xml: { name: 'item' } })
-      }
+      properties: {
+        docs: {
+          type: 'array',
+          items: lodash.merge({}, this.resultWithOptions(options), {
+            xml: { name: 'item' },
+          }),
+        },
+      },
     });
-  }
+  };
 
   get paginateOptions(): IDocsParameter {
     return PAGINATE_OPTIONS;
@@ -181,7 +191,9 @@ export interface IDocs {
 }
 
 export function model2Schema(model): IDocsDataTypeItem {
-  return lodash.merge(signObjectType(model.schema.obj), { xml: { name: 'xml' } });
+  return lodash.merge(signObjectType(model.schema.obj), {
+    xml: { name: 'xml' },
+  });
 }
 
 function signSimpleType(obj): IDocsDataTypeItem {
