@@ -9,32 +9,43 @@ export interface IResultOptions {
 }
 
 export class DocSchema {
-  constructor(private model) {}
+  private __schema: IDocsDataTypeItem;
+  private __result: IDocsDataTypeItem;
+  private __paginateResult: IDocsDataTypeItem;
+  private __body: IDocsParameter;
 
-  get paginateResult() {
-    const result = this.result;
-    delete result.xml;
-    const paginateResult = Object.assign({}, PAGINATE_RESULT);
-    return lodash.merge(paginateResult, {
-      properties: {
-        docs: this.result,
-      },
-    });
+  constructor(private model) { }
+
+  get schema(): IDocsDataTypeItem {
+    if (!this.__schema)
+      this.__schema = model2Schema(this.model);
+    return this.__schema;
   }
 
-  public paginateResultWithOptions(options: IResultOptions) {
-    const result = this.resultWithOptions(options);
-    delete result.xml;
-    const paginateResult = Object.assign({}, PAGINATE_RESULT);
-    return lodash.merge(paginateResult, {
-      properties: {
-        docs: result,
-      },
-    });
+  get result(): IDocsDataTypeItem {
+    if (!this.__result)
+      this.__result = lodash.merge({
+        properties: {
+          _id: { type: 'string' },
+          __v: { type: 'string' },
+        }
+      }, this.schema);
+    return this.__result;
   }
 
-  public resultWithOptions(options: IResultOptions) {
-    const result = this.result;
+  get paginateResult(): IDocsDataTypeItem {
+    if (!this.__paginateResult)
+      this.__paginateResult = lodash.merge({}, PAGINATE_RESULT, {
+        docs: {
+          type: 'array',
+          items: lodash.merge({}, this.result, { xml: { name: 'item' } })
+        }
+      });
+    return this.__paginateResult;
+  }
+
+  public resultWithOptions = (options: IResultOptions): IDocsDataTypeItem => {
+    const result = lodash.merge({}, this.result);
     const properties = result.properties;
     if (typeof options.select === 'string') {
       result.properties = {};
@@ -50,42 +61,35 @@ export class DocSchema {
     return result;
   }
 
-  get result() {
-    const schema = model2Schema(this.model);
-    schema.properties._id = schema.properties._id || {
-      type: 'string',
-    };
-    schema.properties.__v = schema.properties.__v || {
-      type: 'string',
-    };
-    schema.xml = {
-      name: 'xml',
-    };
-    return schema;
+  public paginateResultWithOptions = (options: IResultOptions): IDocsDataTypeItem => {
+    return lodash.merge({}, PAGINATE_RESULT, {
+      docs: {
+        type: 'array',
+        items: lodash.merge({}, this.resultWithOptions(options), { xml: { name: 'item' } })
+      }
+    });
   }
 
-  get paginateOptions() {
+  get paginateOptions(): IDocsParameter {
     return PAGINATE_OPTIONS;
   }
 
-  get showOptions() {
+  get showOptions(): IDocsParameter {
     return SHOW_OPTIONS;
   }
 
-  get paramId() {
+  get paramId(): IDocsParameter {
     return PARAM_ID;
   }
 
   get body(): IDocsParameter {
-    const schema = model2Schema(this.model);
-    schema.xml = {
-      name: 'xml',
-    };
-    return {
-      in: 'body',
-      name: 'body',
-      schema,
-    };
+    if (!this.__body)
+      this.__body = {
+        in: 'body',
+        name: 'body',
+        schema: this.schema,
+      };
+    return this.__body;
   }
 
   get response4xx() {
@@ -177,7 +181,7 @@ export interface IDocs {
 }
 
 export function model2Schema(model): IDocsDataTypeItem {
-  return signObjectType(model.schema.obj);
+  return lodash.merge(signObjectType(model.schema.obj), { xml: { name: 'xml' } });
 }
 
 function signSimpleType(obj): IDocsDataTypeItem {
