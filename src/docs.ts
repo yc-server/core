@@ -3,13 +3,19 @@ import * as lodash from 'lodash';
 export interface IResultOptions {
   select?: string;
   exclude?: string;
+  extras?: {
+    [index: string]: IDocsDataTypeItem;
+  };
 }
 
 export class DocSchema {
   constructor(private model) {}
 
   get paginateResult() {
-    return lodash.merge({}, PAGINATE_RESULT, {
+    const result = this.result;
+    delete result.xml;
+    const paginateResult = Object.assign({}, PAGINATE_RESULT);
+    return lodash.merge(paginateResult, {
       properties: {
         docs: this.result,
       },
@@ -17,9 +23,12 @@ export class DocSchema {
   }
 
   public paginateResultWithOptions(options: IResultOptions) {
-    return lodash.merge({}, PAGINATE_RESULT, {
+    const result = this.resultWithOptions(options);
+    delete result.xml;
+    const paginateResult = Object.assign({}, PAGINATE_RESULT);
+    return lodash.merge(paginateResult, {
       properties: {
-        docs: this.resultWithOptions(options),
+        docs: result,
       },
     });
   }
@@ -32,14 +41,12 @@ export class DocSchema {
       for (const k of options.select.split(' ')) {
         if (k) result.properties[k] = properties[k];
       }
-      return result;
-    }
-    if (typeof options.exclude === 'string') {
+    } else if (typeof options.exclude === 'string') {
       for (const k of options.exclude.split(' ')) {
         if (k) delete result.properties[k];
       }
-      return result;
     }
+    if (options.extras) lodash.merge(result.properties, options.extras);
     return result;
   }
 
@@ -48,8 +55,11 @@ export class DocSchema {
     schema.properties._id = schema.properties._id || {
       type: 'string',
     };
-    schema.properties._id = schema.properties.__v || {
+    schema.properties.__v = schema.properties.__v || {
       type: 'string',
+    };
+    schema.xml = {
+      name: 'xml',
     };
     return schema;
   }
@@ -269,6 +279,9 @@ const PAGINATE_RESULT: IDocsDataTypeItem = {
     },
   },
   type: 'object',
+  xml: {
+    name: 'xml',
+  },
 };
 
 const SHOW_OPTIONS: IDocsParameter = {
