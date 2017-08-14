@@ -1,6 +1,6 @@
 {
   "name": "@ycs/core",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Simple restful framework using node and typescript",
   "license": "MIT",
   "repository": "https://github.com/yc-server/core.git",
@@ -39,6 +39,7 @@
     "@types/mongoose": "^4.7.19",
     "@types/mongoose-paginate": "^5.0.5",
     "@types/xml2json": "^0.10.0",
+    "@ycnt/mm2ssd": "^1.0.1",
     "boom": "^5.2.0",
     "colors": "^1.1.2",
     "ejs": "^2.5.7",
