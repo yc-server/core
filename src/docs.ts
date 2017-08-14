@@ -1,3 +1,4 @@
+import { mm2ssd } from '@ycnt/mm2ssd';
 import * as lodash from 'lodash';
 
 export interface IResultOptions {
@@ -191,64 +192,7 @@ export interface IDocs {
 }
 
 export function model2Schema(model): IDocsDataTypeItem {
-  return lodash.merge(signObjectType(model.schema.obj), {
-    xml: { name: 'xml' },
-  });
-}
-
-function signSimpleType(obj): IDocsDataTypeItem {
-  switch (obj) {
-    case Date:
-      return {
-        format: 'date-time',
-        type: 'string',
-      };
-    case Boolean:
-      return {
-        type: 'boolean',
-      };
-    case Number:
-      return {
-        type: 'number',
-      };
-    default:
-      return {
-        type: 'string',
-      };
-  }
-}
-
-function signArrayType(obj): IDocsDataTypeItem {
-  const res: any = {
-    items: {},
-    type: 'array',
-  };
-
-  if (obj[0].constructor === Array) {
-    res.items = signArrayType(obj[0]);
-  } else if (obj[0].constructor === Object) {
-    res.items = signObjectType(obj[0]);
-  } else {
-    res.items = signSimpleType(obj[0]);
-  }
-  return res;
-}
-
-function signObjectType(obj): IDocsDataTypeItem {
-  const res: any = {
-    properties: {},
-    type: 'object',
-  };
-  for (const k of Object.keys(obj)) {
-    if (obj[k].constructor === Array) {
-      res.properties[k] = signArrayType(obj[k]);
-    } else if (obj[k].constructor === Object) {
-      res.properties[k] = signObjectType(obj[k]);
-    } else {
-      res.properties[k] = signSimpleType(obj[k]);
-    }
-  }
-  return res;
+  return mm2ssd(model, 'xml');
 }
 
 const PAGINATE_OPTIONS: IDocsParameter = {
