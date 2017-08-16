@@ -11,6 +11,7 @@ export interface IResultOptions {
 
 export class DocSchema {
   private __schema: IDocsDataTypeItem;
+  private __filters: IDocsParameter;
   private __result: IDocsDataTypeItem;
   private __paginateResult: IDocsDataTypeItem;
   private __body: IDocsParameter;
@@ -20,6 +21,21 @@ export class DocSchema {
   get schema(): IDocsDataTypeItem {
     if (!this.__schema) this.__schema = model2Schema(this.model);
     return this.__schema;
+  }
+
+  get filters(): IDocsParameter {
+    if (!this.__filters) {
+      let str = '\n    {';
+      str += Object.keys(this.schema.properties).map(k => `      ${k}: {}`).join(',\n');
+      str += '\n    }\n';
+      this.__filters = {
+        description: str,
+        in: 'query',
+        name: '_filters',
+      };
+    }
+
+    return this.__filters;
   }
 
   get result(): IDocsDataTypeItem {
