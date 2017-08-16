@@ -25,7 +25,7 @@ export class DocSchema {
 
   get filters(): IDocsParameter {
     if (!this.__filters) {
-      let str = '\n    {';
+      let str = '\n    {\n';
       str += Object.keys(this.schema.properties)
         .map(k => `      ${k}: {}`)
         .join(',\n');
