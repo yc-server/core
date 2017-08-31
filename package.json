@@ -1,6 +1,6 @@
 {
   "name": "@ycs/core",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Simple restful framework using node and typescript",
   "license": "MIT",
   "repository": "https://github.com/yc-server/core.git",
@@ -50,6 +50,7 @@
     "koa-compress": "^2.0.0",
     "koa-conditional-get": "^2.0.0",
     "koa-convert": "^1.2.0",
+    "koa-cors": "0.0.16",
     "koa-etag": "^3.0.0",
     "koa-logger": "^3.0.1",
     "koa-mount": "^3.0.0",
