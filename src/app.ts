@@ -48,8 +48,7 @@ export class Ycs extends koa {
     await setupMongodb(this);
 
     this.use(logger());
-    if (this.config.cors)
-      this.use(convert(cors(this.config.cors)));
+    if (this.config.cors) this.use(convert(cors(this.config.cors)));
     this.use(
       convert(
         body({
