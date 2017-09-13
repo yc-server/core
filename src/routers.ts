@@ -194,7 +194,9 @@ export const SimpleAuthRouter = new Router('/auth/simple').paths(
           throw boom.forbidden(
             Ycs.instance.config.auth.messages.errors.invalid_password
           );
-        const token = signToken(auth, { expiresIn: '1h' });
+        const token = signToken(auth, {
+          expiresIn: Ycs.instance.config.auth.expiresIn || '1h',
+        });
         response(ctx, 200, { token });
       } catch (e) {
         handleError(ctx, e);
