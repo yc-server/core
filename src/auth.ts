@@ -40,7 +40,6 @@ export async function setup(app: Ycs) {
         default: app.config.auth.defaultRoles,
       },
       salt: {
-        required: true,
         type: String,
       },
       username: {
