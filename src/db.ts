@@ -36,8 +36,9 @@ export function Model(options: IModelOptions): IModel {
   );
   model['docSchema'] = new DocSchema(model);
   model['routes'] = (prefix, ...paths) => {
-    const router = new Router(prefix).paths(...paths);
+    const router = new Router(prefix);
     router.model = model as IModel;
+    router.paths(...paths);
     return router;
   };
   return model as IModel;
