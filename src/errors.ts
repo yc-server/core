@@ -26,6 +26,7 @@ export function handleError(
   if (be.output.statusCode >= 500) {
     console.log(`[${colors.red(moment().format('YY-MM-DD HH:mm:ss'))}]`);
     console.log(colors.red(JSON.stringify(be.output.payload, null, 2)));
+    console.error(error);
   } else {
     console.log(`[${colors.yellow(moment().format('YY-MM-DD HH:mm:ss'))}]`);
     console.log(colors.yellow(JSON.stringify(be.output.payload, null, 2)));
