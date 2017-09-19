@@ -117,20 +117,8 @@ export function patchUpdates(
   entity: mongoose.Document,
   updates: any
 ): mongoose.Document {
-  if (updates._id) delete updates._id;
-  const updated = _.mergeWith(entity, updates, (objValue, srcValue) => {
-    if (_.isObject(objValue) && srcValue === null) {
-      if (_.isArray(objValue)) return [];
-      return {};
-    }
-    if (_.isArray(objValue)) {
-      const merged = [];
-      for (let i = 0; i < srcValue.length; i++) {
-        merged[i] =
-          objValue[i] !== 'ARRAY_ITEM_KEEP' ? objValue[i] : srcValue[i];
-      }
-      return merged.filter(x => x !== null);
-    }
-  });
-  return updated;
+  for (const key of Object.keys(updates)) {
+    entity[key] = updates[key];
+  }
+  return entity;
 }
