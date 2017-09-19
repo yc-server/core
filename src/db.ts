@@ -127,9 +127,7 @@ export function patchUpdates(
       const merged = [];
       for (let i = 0; i < srcValue.length; i++) {
         merged[i] =
-          _.isEmpty(srcValue[i]) && srcValue[i] !== null
-            ? objValue[i]
-            : srcValue[i];
+          objValue[i] !== 'ARRAY_ITEM_KEEP' ? objValue[i] : srcValue[i];
       }
       return merged.filter(x => x !== null);
     }
