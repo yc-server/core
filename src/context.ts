@@ -13,6 +13,7 @@ export interface IRequest extends Request {
     roles: string[];
     owns: boolean;
   };
+  body: string;
 }
 
 export interface IContext extends IRouterContext {
