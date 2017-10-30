@@ -5,7 +5,7 @@ import { Ycs } from './app';
 
 export async function setup(app: Ycs) {
   const server = http.createServer(app.callback());
-  if(app.config.http && app.config.http.preListen) {
+  if (app.config.http && app.config.http.preListen) {
     app.config.http.preListen();
   }
   server.listen(app.config.port);
