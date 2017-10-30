@@ -4,7 +4,11 @@ import * as moment from 'moment';
 import { Ycs } from './app';
 
 export async function setup(app: Ycs) {
-  http.createServer(app.callback()).listen(app.config.port);
+  const server = http.createServer(app.callback());
+  if (app.config.http && app.config.http.preListen) {
+    app.config.http.preListen();
+  }
+  server.listen(app.config.port);
   console.log(
     `[${colors.green(
       moment().format('YY-MM-DD HH:mm:ss')
