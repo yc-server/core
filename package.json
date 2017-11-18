@@ -60,6 +60,7 @@
     "mongoose-paginate": "^5.0.3",
     "mongoose-unique-validator": "^1.0.5",
     "qs": "^6.5.0",
+    "spdy": "^3.4.7",
     "typed-promisify": "^0.4.0",
     "xml2json": "^0.11.0"
   },
