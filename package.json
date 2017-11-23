@@ -68,11 +68,11 @@
     "@types/jest": "^20.0.5",
     "@types/node": "^8.0.0",
     "coveralls": "^2.0.0",
-    "jest": "^20.0.4",
+    "jest": "^21.2.1",
     "jest-environment-node-debug": "^2.0.0",
     "prettier": "^1.5.2",
     "rimraf": "^2.0.0",
-    "ts-jest": "^20.0.7",
+    "ts-jest": "^21.2.3",
     "ts-node": "^3.2.0",
     "tslint": "^5.0.0",
     "tslint-config-prettier": "^1.1.0",
@@ -85,11 +85,12 @@
     "transform": {
       ".(ts)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.ts$",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "mapCoverage": true
   }
 }
