@@ -1,6 +1,6 @@
 {
   "name": "@ycs/core",
-  "version": "0.1.21",
+  "version": "0.2.0",
   "description": "Simple restful framework using node and typescript",
   "license": "MIT",
   "repository": "https://github.com/yc-server/core.git",
@@ -60,18 +60,21 @@
     "mongoose-paginate": "^5.0.3",
     "mongoose-unique-validator": "^1.0.5",
     "qs": "^6.5.0",
+    "socket.io": "^2.0.4",
+    "spdy": "^3.4.7",
     "typed-promisify": "^0.4.0",
     "xml2json": "^0.11.0"
   },
   "devDependencies": {
     "@types/jest": "^20.0.5",
     "@types/node": "^8.0.0",
+    "@types/socket.io": "^1.4.31",
     "coveralls": "^2.0.0",
-    "jest": "^20.0.4",
+    "jest": "^21.2.1",
     "jest-environment-node-debug": "^2.0.0",
     "prettier": "^1.5.2",
     "rimraf": "^2.0.0",
-    "ts-jest": "^20.0.7",
+    "ts-jest": "^21.2.3",
     "ts-node": "^3.2.0",
     "tslint": "^5.0.0",
     "tslint-config-prettier": "^1.1.0",
@@ -84,11 +87,12 @@
     "transform": {
       ".(ts)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.ts$",
     "moduleFileExtensions": [
       "ts",
       "js"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "mapCoverage": true
   }
 }
