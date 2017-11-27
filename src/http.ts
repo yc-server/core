@@ -32,10 +32,14 @@ export async function setupSocketIo(app: Ycs, server: http.Server) {
   const sockets: Socket[] = [];
   for (const dir of dirs) {
     if (/^\./.test(dir)) continue;
-    const stat = await promisify(fs.stat)(`${apiDir}/${dir}/socket.js`);
-    if (stat.isFile) {
-      const socket: Socket = require(`${app.dir}/api/${dir}/socket`).default;
-      sockets.push(socket);
+    try {
+      const stat = await promisify(fs.stat)(`${apiDir}/${dir}/socket.js`);
+      if (stat.isFile) {
+        const socket: Socket = require(`${app.dir}/api/${dir}/socket`).default;
+        sockets.push(socket);
+      }
+    } catch (e) {
+      continue;
     }
   }
   const io: SocketIO.Server = IO(server);
