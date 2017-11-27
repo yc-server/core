@@ -34,7 +34,7 @@ export async function setupSocketIo(app: Ycs, server: http.Server) {
     if (/^\./.test(dir)) continue;
     const stat = await promisify(fs.stat)(`${apiDir}/${dir}/socket.js`);
     if (stat.isFile) {
-      const socket: Socket = require(`${app.dir}/api/${dir}/socket`);
+      const socket: Socket = require(`${app.dir}/api/${dir}/socket`).default;
       sockets.push(socket);
     }
   }
