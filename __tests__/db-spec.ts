@@ -1,9 +1,4 @@
-import {
-  Mongoose,
-  Model,
-  Schema,
-  patchUpdates,
-} from '../src/db';
+import { Mongoose, Model, Schema, patchUpdates } from '../src/db';
 import { setup as setupMongodb } from '../src/mongodb';
 
 describe('test crud', () => {

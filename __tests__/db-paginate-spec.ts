@@ -99,8 +99,8 @@ describe('test paginate', () => {
   it('should throw an error by filters', async () => {
     const ctx: any = {
       request: {
-        query: {}
-      }
+        query: {},
+      },
     };
     ctx.request.query._filters = 'xxx';
     await expect(paginate(model, ctx)).rejects.toEqual(expect.any(SyntaxError));
@@ -109,8 +109,8 @@ describe('test paginate', () => {
   it('should throw an error by options', async () => {
     const ctx: any = {
       request: {
-        query: {}
-      }
+        query: {},
+      },
     };
     ctx.request.query._options = 'xxx';
     await expect(paginate(model, ctx)).rejects.toEqual(expect.any(SyntaxError));
