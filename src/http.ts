@@ -7,6 +7,8 @@ import * as fs from 'fs';
 import { promisify } from 'typed-promisify';
 import * as IO from 'socket.io';
 import { Socket } from './socket';
+import * as redis from 'socket.io-redis';
+
 
 export async function setup(app: Ycs) {
   const server = http.createServer(app.callback());
@@ -43,6 +45,7 @@ export async function setupSocketIo(app: Ycs, server: http.Server) {
     }
   }
   const io: SocketIO.Server = IO(server);
+  io.adapter(redis({ host: 'localhost', port: 6379 }));
   io.on('connection', socket => {
     if (app.config.http.socket.onConnection) {
       app.config.http.socket.onConnection(socket);
