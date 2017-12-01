@@ -47,7 +47,7 @@ export async function setup(app: Ycs) {
   const port = config.startPort + ~~process.env.pm_id;
   io = IO(port);
   io.adapter(redis({ host: config.redis.host, port: config.redis.port }));
-  io.of('/').adapter.on('connection', socket => {
+  io.on('connection', socket => {
     if (config.onConnection) {
       config.onConnection(socket);
     }
