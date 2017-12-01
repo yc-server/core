@@ -12,6 +12,7 @@ import * as xml2json from 'xml2json';
 import { setup as setupAuth } from './auth';
 import { setup as setupHttp } from './http';
 import { setup as setupSpdy } from './spdy';
+import { setup as setupSocket } from './socket';
 import { setup as setupMongodb } from './mongodb';
 import { setup as setupPlugins } from './plugins';
 import { setup as setupRouters } from './routers';
@@ -74,6 +75,7 @@ export class Ycs extends koa {
     await setupRouters(this);
     await setupHttp(this);
     await setupSpdy(this);
+    await setupSocket(this);
     await setupPlugins(this, 'post');
   }
 }
