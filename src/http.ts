@@ -9,7 +9,6 @@ import * as IO from 'socket.io';
 import { Socket } from './socket';
 import * as redis from 'socket.io-redis';
 
-
 export async function setup(app: Ycs) {
   const server = http.createServer(app.callback());
   if (app.config.http) {
