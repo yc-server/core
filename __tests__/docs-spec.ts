@@ -13,42 +13,41 @@ describe('test class DocSchema', () => {
   const docSchema = new DocSchema(model);
   it('should match schema', () => {
     expect(docSchema.schema).toMatchObject({
-      properties:
-      {
+      properties: {
         __auth: {
           required: true,
-          type: 'string'
+          type: 'string',
         },
         __v: {
           format: 'int64',
           required: false,
-          type: 'integer'
+          type: 'integer',
         },
         _id: {
           required: false,
-          type: 'string'
+          type: 'string',
         },
         info: {
           required: false,
-          type: 'string'
+          type: 'string',
         },
         name: {
           required: false,
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
       required: ['__auth'],
       type: 'object',
       xml: {
-        name: 'xml'
-      }
+        name: 'xml',
+      },
     });
   });
   it('should match filters', () => {
     const filters = docSchema.filters;
     expect(filters).toMatchObject({
       in: 'query',
-      name: '_filters'
+      name: '_filters',
     });
     expect(filters.description).toMatch(/name: \{\}/);
     expect(filters.description).toMatch(/info: \{\}/);
@@ -58,31 +57,31 @@ describe('test class DocSchema', () => {
       properties: {
         __auth: {
           required: true,
-          type: 'string'
+          type: 'string',
         },
         __v: {
           format: 'int64',
           required: false,
-          type: 'integer'
+          type: 'integer',
         },
         _id: {
           required: false,
-          type: 'string'
+          type: 'string',
         },
         info: {
           required: false,
-          type: 'string'
+          type: 'string',
         },
         name: {
           required: false,
-          type: 'string'
-        }
+          type: 'string',
+        },
       },
       required: ['__auth'],
       type: 'object',
       xml: {
-        name: 'xml'
-      }
+        name: 'xml',
+      },
     });
   });
 });
