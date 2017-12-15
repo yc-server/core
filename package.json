@@ -39,6 +39,8 @@
     "@types/lodash": "^4.14.72",
     "@types/mongoose": "^4.7.19",
     "@types/mongoose-paginate": "^5.0.5",
+    "@types/socket.io": "^1.4.31",
+    "@types/socket.io-redis": "^1.0.22",
     "@types/xml2json": "^0.10.0",
     "@ycnt/mm2ssd": "^1.0.2",
     "boom": "^5.2.0",
@@ -70,8 +72,6 @@
   "devDependencies": {
     "@types/jest": "^21.1.8",
     "@types/node": "^8.0.0",
-    "@types/socket.io": "^1.4.31",
-    "@types/socket.io-redis": "^1.0.22",
     "@types/spdy": "^3.4.4",
     "coveralls": "^2.0.0",
     "jest": "^21.2.1",
