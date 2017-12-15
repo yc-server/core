@@ -6,19 +6,48 @@ import { DocSchema, IDocs } from './docs';
 import { Boom } from './errors';
 import { Router } from './routers';
 
+/**
+ * Model options
+ */
 export interface IModelOptions {
+  /**
+   * Wheather the document need be authenticated.
+   */
   auth?: boolean;
+
+  /**
+   * Same as mongoose model collection
+   */
   collection?: string;
+
+  /**
+   * Same as mongoose model name
+   */
   name: string;
+
+  /**
+   * Same as mongoose schema
+   */
   schema: mongoose.Schema;
+
+  /**
+   * Same as mongoose model skipInit
+   */
   skipInit?: boolean;
 }
 
+/**
+ * Ycs model
+ */
 export interface IModel extends mongoose.PaginateModel<mongoose.Document> {
   docSchema: DocSchema;
   routes: (prefix: string, ...paths: IDocs[]) => Router;
 }
 
+/**
+ * Creating a Ycs model
+ * @param options {IModelOptions} Model options
+ */
 export function Model(options: IModelOptions): IModel {
   options.schema.add({
     __auth: {
@@ -44,14 +73,27 @@ export function Model(options: IModelOptions): IModel {
   return model as IModel;
 }
 
+/**
+ * Ref to mongoose.Schema
+ */
 export const Schema = mongoose.Schema;
 
+/**
+ * Ref to mongoose
+ */
 export const Mongoose = mongoose;
 
+/**
+ * Paginating docs
+ * @param model {mongoose.PaginateModel<mongoose.Document>} Ysc model or mongoose PaginateModel
+ * @param ctx {IContext} Ycs context
+ * @param filters {object} Custom filters
+ * @param options {mongoose.PaginateOptions} Custom options. See {@link https://github.com/edwardhotchkiss/mongoose-paginate}
+ */
 export async function paginate(
   model: mongoose.PaginateModel<mongoose.Document>,
   ctx: IContext,
-  filters?: any,
+  filters?: { [x: string]: any },
   options?: mongoose.PaginateOptions
 ): Promise<mongoose.PaginateResult<mongoose.Document>> {
   let _filters = {};
@@ -86,6 +128,12 @@ export async function paginate(
   return await model.paginate(_filters, _options);
 }
 
+/**
+ * Showing a doc with an id form ctx.params.id
+ * @param model {mongoose.PaginateModel<mongoose.Document>} Ysc model or mongoose PaginateModel
+ * @param ctx {IContext} Ycs context
+ * @param options {mongoose.PaginateOptions} Custom options. Only select and populate making effects.
+ */
 export async function show(
   model: mongoose.PaginateModel<mongoose.Document>,
   ctx: IContext,
@@ -113,6 +161,11 @@ export async function show(
   return await query.exec();
 }
 
+/**
+ * Modifying an entity
+ * @param entity {mongoose.Document} The old entity
+ * @param updates {any} Fields to change
+ */
 export function patchUpdates(
   entity: mongoose.Document,
   updates: any

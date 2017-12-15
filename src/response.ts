@@ -1,6 +1,12 @@
 import { Js2Xml } from 'js2xml';
 import { IContext } from './context';
 
+/**
+ * Generating output
+ * @param ctx {IContext} Ycs context
+ * @param status {number} status
+ * @param body {body} body
+ */
 export function response(ctx: IContext, status: number, body?: any) {
   if (!body) {
     ctx.type = 'text/plain';

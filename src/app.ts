@@ -17,35 +17,60 @@ import { setup as setupMongodb } from './mongodb';
 import { setup as setupPlugins } from './plugins';
 import { setup as setupRouters } from './routers';
 
+/**
+ * The application class
+ * 
+ * ```ts
+ * const app = Ycs.create(dirname, config);
+ * app.start();
+ * ```
+ */
 export class Ycs extends koa {
-  public static create(dirname, config): Ycs {
+  /**
+   * Creating a Ycs application
+   * @param dirname {string} App base dir
+   * @param config {object} App configurations
+   */
+  public static create(dirname: string, config: { [x: string]: any }): Ycs {
     Ycs.__instance = new Ycs(dirname, config);
     return Ycs.__instance;
   }
 
   private static __instance: Ycs;
 
-  private __config;
-  private __dirname;
+  private __config: { [x: string]: any };
+  private __dirname: string;
 
-  private constructor(dirname, config) {
+  private constructor(dirname: string, config: { [x: string]: any }) {
     super();
     this.__config = config;
     this.__dirname = dirname;
   }
 
+  /**
+   * The singleton instance.
+   */
   public static get instance(): Ycs {
     return Ycs.__instance;
   }
 
-  public get config() {
+  /**
+   * The app configurations
+   */
+  public get config(): { [x: string]: any } {
     return this.__config;
   }
 
-  public get dir() {
+  /**
+   * Thie app base dir
+   */
+  public get dir(): string {
     return this.__dirname;
   }
 
+  /**
+   * Starting webserver
+   */
   public async start() {
     await setupMongodb(this);
 
@@ -59,6 +84,7 @@ export class Ycs extends koa {
           },
           *handler(ctx, opts) {
             const xml: string = yield ctx.request.text(opts.textLimit);
+            console.log(xml);
             const obj: any = xml2json.toJson(xml, { object: true });
             ctx.request.fields = obj.xml;
           },

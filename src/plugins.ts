@@ -18,7 +18,7 @@ export async function setup(app: Ycs, mode: 'pre' | 'post') {
       if (!/\.js$/.test(fileName)) continue;
       const stat = await promisify(fs.stat)(`${pluginsDir}/${fileName}`);
       if (stat.isFile()) {
-        const plugin = require(`${app.config
+        const plugin = await import(`${app.config
           .root}/node_modules/ycs-plugin-${fileName.substring(
           0,
           fileName.length - 3

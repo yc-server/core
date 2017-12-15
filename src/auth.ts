@@ -277,17 +277,38 @@ export async function setup(app: Ycs) {
   });
 }
 
+/**
+ * A mongoose schema
+ */
 export let AuthSchema: mongoose.Schema;
 
+/**
+ * A mongoose model with name `__auth`
+ */
 export let AuthModel: mongoose.Model<mongoose.Document>;
 
+/**
+ * Signing JWT token
+ */
 export let signToken: (
   doc: mongoose.Document,
   options: jwt.SignOptions
 ) => string;
 
+/**
+ * Verifying JWT token
+ */
 export let verifyToken: (token: string) => Promise<any>;
 
+/**
+ * Getting token from headers
+ * 
+ * ```
+ * Authorization: Bearer xxx
+ * ```
+ * 
+ * @param ctx {IContext} Koa context
+ */
 export function getHeaderToken(ctx: IContext): string {
   if (
     !ctx.headers.authorization ||
@@ -297,13 +318,63 @@ export function getHeaderToken(ctx: IContext): string {
   return ctx.headers.authorization.substring(7);
 }
 
+/**
+ * Middleware to check if it is authenticated.
+ */
 export let isAuthenticated: () => any;
 
+/**
+ * Middleware to check if the authenticated user has specified roles.
+ * @param roles {string[]} specified roles
+ */
 export let hasRoles: (...roles: string[]) => any;
 
+/**
+ * Middleware to check if the authenticated user owns the document by checking the field __auth.
+ */
 export let owns: (model: mongoose.PaginateModel<mongoose.Document>) => any;
 
+/**
+ * Middleware to check if the authenticated user has specified roles,
+ * or the authenticated user owns the document by checking the field __auth.
+ */
 export let ownsOrHasRoles: (
   model: mongoose.PaginateModel<mongoose.Document>,
   ...roles: string[]
 ) => any;
+
+export interface IConfig {
+  /**
+   * Messages
+   */
+  messages: {
+    /**
+     * Error messages
+     */
+    errors: {
+      empty_username: string;
+      empty_password: string;
+      username_already_in_use: string;
+      username_not_registered: string;
+      invalid_password: string;
+      unauthorized: string;
+      invalid_token: string;
+      no_permission: string;
+    };
+  };
+
+  /**
+   * JWT secret
+   */
+  secret: string;
+
+  /**
+   * Use build-in auth router
+   */
+  enableSimpleAuth: boolean;
+
+  /**
+   * Default roles to sign to new user.
+   */
+  defaultRoles: string[];
+}

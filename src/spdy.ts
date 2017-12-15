@@ -16,3 +16,15 @@ export async function setup(app: Ycs): Promise<boolean> {
   );
   return true;
 }
+
+export interface IConfig {
+  /**
+   * spdy server options
+   */
+  options: spdy.server.ServerOptions;
+
+  /**
+   * https port
+   */
+  port: number;
+}

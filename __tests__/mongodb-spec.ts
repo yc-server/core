@@ -1,5 +1,6 @@
 import { setup } from '../src/mongodb';
 import { Mongoose } from '../src/db';
+import * as mocker from './mock';
 
 describe('test mongodb', () => {
   const backup = {
@@ -9,9 +10,7 @@ describe('test mongodb', () => {
   };
 
   beforeAll(() => {
-    Mongoose.connect = jest.fn();
-    Mongoose.connection.on = jest.fn().mockImplementation((x, cb) => cb(x));
-    process.exit = jest.fn() as any;
+    mocker.mockMongoose();
   });
 
   test('it should connect mongodb', async () => {
@@ -32,8 +31,6 @@ describe('test mongodb', () => {
   });
 
   afterAll(() => {
-    Mongoose.connect = backup.connect;
-    Mongoose.connection.on = backup.on;
-    process.exit = backup.exit;
+    mocker.unmockMongoose();
   });
 });

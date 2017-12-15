@@ -19,42 +19,41 @@ describe('test crud', () => {
     expect(model.schema.path('name')).toBeTruthy();
     expect(model.schema.path('info')).toBeTruthy();
     // 1.3 test model['routes']
-    const paths : IDocs[] = [
-        {
-          path: '/',
-          methods: ['put', 'patch'],
-          controller: async (ctx: any) => {
-            return true;
+    const paths: IDocs[] = [
+      {
+        path: '/',
+        methods: ['put', 'patch'],
+        controller: async (ctx: any) => {
+          return true;
+        },
+        tags: ['docs2'],
+        responses: {
+          200: {
+            description: 'Successful operation',
           },
-          tags:['docs2'],
-          responses: {
-            200: {
-              description: 'Successful operation'
-            },
-          },
-        }
+        },
+      },
     ];
-    expect(model.routes("prefix", ...paths).docs).toMatchObject({
+    expect(model.routes('prefix', ...paths).docs).toMatchObject({
       prefix: {
-        'put':{
-          tags:['docs2'],
+        put: {
+          tags: ['docs2'],
           responses: {
             200: {
-              description: 'Successful operation'
+              description: 'Successful operation',
             },
           },
         },
-        'patch':{
-          tags:['docs2'],
+        patch: {
+          tags: ['docs2'],
           responses: {
             200: {
-              description: 'Successful operation'
+              description: 'Successful operation',
             },
           },
         },
       },
     });
-
   });
 
   it('should update an entity', async () => {

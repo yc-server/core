@@ -49,7 +49,7 @@ describe('test class DocSchema', () => {
   // 2. test get filters()
   it('should match filters', () => {
     const filters = docSchema.filters;
-     // 2.1  __filters is false
+    // 2.1  __filters is false
     expect(filters).toMatchObject({
       in: 'query',
       name: '_filters',
@@ -197,7 +197,7 @@ describe('test class DocSchema', () => {
   });
 
   // 5. test resultWithOptions(options: IResultOptions)
-  it("should match resultWithOptions",()=>{
+  it('should match resultWithOptions', () => {
     // 5.1 test with 空对象
     const iResultOptions = {};
     const resultWithOptions = docSchema.resultWithOptions(iResultOptions);
@@ -233,8 +233,8 @@ describe('test class DocSchema', () => {
     });
     // 5.2 test with select data
     const iResultOptions2 = {
-      select:'name  age',
-      exclude:'info',
+      select: 'name  age',
+      exclude: 'info',
     };
     const resultWithOptions2 = docSchema.resultWithOptions(iResultOptions2);
     expect(resultWithOptions2).toEqual({
@@ -243,7 +243,7 @@ describe('test class DocSchema', () => {
           required: false,
           type: 'string',
         },
-        age: undefined
+        age: undefined,
       },
       required: ['__auth'],
       type: 'object',
@@ -254,8 +254,8 @@ describe('test class DocSchema', () => {
 
     // 5.3 test key: exclude
     const iResultOptions3 = {
-      exclude:'name   age',
-      extras:{}
+      exclude: 'name   age',
+      extras: {},
     };
     const resultWithOptions3 = docSchema.resultWithOptions(iResultOptions3);
     expect(resultWithOptions3).toEqual({
@@ -287,7 +287,7 @@ describe('test class DocSchema', () => {
   });
 
   // 6. test paginateResultWithOptions(options: IResultOptions)
-  it("should match paginateResultWithOptions",()=>{
+  it('should match paginateResultWithOptions', () => {
     // 6.1 test with 空对象
     const resultWithOptions1 = {};
     const options = docSchema.paginateResultWithOptions(resultWithOptions1);
@@ -351,11 +351,11 @@ describe('test class DocSchema', () => {
       type: 'object',
       xml: {
         name: 'xml',
-      }
+      },
     });
     // 6.2 test with select
     const resultWithOptions2 = {
-      select : 'name info',
+      select: 'name info',
     };
     const options2 = docSchema.paginateResultWithOptions(resultWithOptions2);
     expect(options2).toEqual({
@@ -405,12 +405,12 @@ describe('test class DocSchema', () => {
       type: 'object',
       xml: {
         name: 'xml',
-      }
+      },
     });
   });
 
   // 7. test get paginateOptions()
-  it("test get paginateOptions()", ()=>{
+  it('test get paginateOptions()', () => {
     expect(docSchema.paginateOptions).toMatchObject({
       description: `More info at [https://www.npmjs.com/package/mongoose-paginate](https://www.npmjs.com/package/mongoose-paginate)
   <br />
@@ -432,9 +432,9 @@ describe('test class DocSchema', () => {
   });
 
   // 8. test get showOptions()
-  it("test get showOptions()", ()=>{
+  it('test get showOptions()', () => {
     expect(docSchema.showOptions).toMatchObject({
-      description:`
+      description: `
     {
       "select": String,
       "populate": String
@@ -446,7 +446,7 @@ describe('test class DocSchema', () => {
   });
 
   // 9. test get paramId()
-  it("test get paramId()", ()=>{
+  it('test get paramId()', () => {
     expect(docSchema.paramId).toMatchObject({
       description: 'Unique id',
       in: 'path',
@@ -457,12 +457,12 @@ describe('test class DocSchema', () => {
   });
 
   // 10. test get body()
-  it("test get body()", ()=>{
+  it('test get body()', () => {
     // 10.1 body is false
     expect(docSchema.body).toMatchObject({
       in: 'body',
       name: 'body',
-      schema:{
+      schema: {
         properties: {
           __auth: {
             required: true,
@@ -504,27 +504,26 @@ describe('test class DocSchema', () => {
     });
     const docSchema10: any = new DocSchema(model10);
     docSchema10.__body = {
-      in : 'body',
-      name : '__body'
-    }
+      in: 'body',
+      name: '__body',
+    };
     expect(docSchema10.body).toMatchObject({
-      in : 'body',
-      name : '__body'
+      in: 'body',
+      name: '__body',
     });
   });
 
   // 11. test get response4xx()
-  it("test get response4xx()", ()=>{
+  it('test get response4xx()', () => {
     expect(docSchema.response4xx).toMatchObject({
       description: 'Client side errors',
     });
   });
 
   // 12. test get response5xx()
-  it("test get response5xx()", ()=>{
+  it('test get response5xx()', () => {
     expect(docSchema.response5xx).toMatchObject({
       description: 'Server side errors',
     });
   });
-
 });

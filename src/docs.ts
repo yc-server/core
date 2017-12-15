@@ -1,14 +1,36 @@
 import { mm2ssd } from '@ycnt/mm2ssd';
 import * as lodash from 'lodash';
+import * as mongoose from 'mongoose';
 
+/**
+ * Result options
+ */
 export interface IResultOptions {
+  /**
+   * Fields to select. 
+   * @example
+   * '_id name'
+   */
   select?: string;
+
+  /**
+   * Fields to exlude. 
+   * @example
+   * 'createdAt updatedAt'
+   */
   exclude?: string;
+
+  /**
+   * Extra fields to append
+   */
   extras?: {
     [index: string]: IDocsDataTypeItem;
   };
 }
 
+/**
+ * DocSchema class
+ */
 export class DocSchema {
   private __schema: IDocsDataTypeItem;
   private __filters: IDocsParameter;
@@ -16,13 +38,19 @@ export class DocSchema {
   private __paginateResult: IDocsDataTypeItem;
   private __body: IDocsParameter;
 
-  constructor(private model) {}
+  constructor(private model: mongoose.PaginateModel<mongoose.Document>) {}
 
+  /**
+   * The swagger ui schema
+   */
   get schema(): IDocsDataTypeItem {
     if (!this.__schema) this.__schema = model2Schema(this.model);
     return this.__schema;
   }
 
+  /**
+   * Filters in query
+   */
   get filters(): IDocsParameter {
     if (!this.__filters) {
       let str = '\n    {\n';
@@ -40,6 +68,9 @@ export class DocSchema {
     return this.__filters;
   }
 
+  /**
+   * The default result
+   */
   get result(): IDocsDataTypeItem {
     if (!this.__result)
       this.__result = lodash.merge(
@@ -54,6 +85,9 @@ export class DocSchema {
     return this.__result;
   }
 
+  /**
+   * The default paginated result
+   */
   get paginateResult(): IDocsDataTypeItem {
     if (!this.__paginateResult)
       this.__paginateResult = lodash.merge({}, PAGINATE_RESULT, {
@@ -67,6 +101,9 @@ export class DocSchema {
     return this.__paginateResult;
   }
 
+  /**
+   * Result with options
+   */
   public resultWithOptions = (options: IResultOptions): IDocsDataTypeItem => {
     const result = lodash.merge({}, this.result);
     const properties = result.properties;
@@ -84,6 +121,9 @@ export class DocSchema {
     return result;
   };
 
+  /**
+   * Paginated result with options
+   */
   public paginateResultWithOptions = (
     options: IResultOptions
   ): IDocsDataTypeItem => {
@@ -99,18 +139,30 @@ export class DocSchema {
     });
   };
 
+  /**
+   * Paginate options in query
+   */
   get paginateOptions(): IDocsParameter {
     return PAGINATE_OPTIONS;
   }
 
+  /**
+   * Show options in query
+   */
   get showOptions(): IDocsParameter {
     return SHOW_OPTIONS;
   }
 
+  /**
+   * Id in path
+   */
   get paramId(): IDocsParameter {
     return PARAM_ID;
   }
 
+  /**
+   * Body in body
+   */
   get body(): IDocsParameter {
     if (!this.__body)
       this.__body = {
@@ -121,20 +173,34 @@ export class DocSchema {
     return this.__body;
   }
 
+  /**
+   * 4xx results
+   */
   get response4xx() {
     return RESPONSE_4XX;
   }
 
+  /**
+   * 5xx results
+   */
   get response5xx() {
     return RESPONSE_5XX;
   }
 }
 
+/**
+ * Content-Types
+ */
 export type IDocsAccept =
   | 'application/xml'
   | 'application/json'
   | 'text/plain'
   | 'multipart/form-data';
+
+/**
+ * Swagger ui data types
+ * {@link https://swagger.io/specification/#dataTypes}
+ */
 export type IDocsDataType =
   | 'integer'
   | 'number'
@@ -143,6 +209,11 @@ export type IDocsDataType =
   | 'file'
   | 'array'
   | 'object';
+
+/**
+ * Swagger ui data formats
+ * {@link https://swagger.io/specification/#dataTypes}
+ */
 export type IDocsDataFormat =
   | 'int32'
   | 'int64'
@@ -153,10 +224,21 @@ export type IDocsDataFormat =
   | 'date-time'
   | 'password';
 
+/**
+ * Swagger ui schema item
+ */
 export interface IDocsDataTypeItem {
   type: IDocsDataType;
   format?: IDocsDataFormat;
+
+  /**
+   * Required when type is array
+   */
   items?: IDocsDataTypeItem;
+
+  /**
+   * Required when type is object
+   */
   properties?: IDocsDataTypeProperties;
   description?: string;
   required?: boolean;
@@ -165,10 +247,16 @@ export interface IDocsDataTypeItem {
   };
 }
 
+/**
+ * swagger ui object properties
+ */
 export interface IDocsDataTypeProperties {
   [index: string]: IDocsDataTypeItem;
 }
 
+/**
+ * Swagger ui schema item
+ */
 export interface IDocsParameter {
   in: 'body' | 'query' | 'formData' | 'path';
   name: string;
@@ -187,20 +275,73 @@ export interface IDocsParameter {
   schema?: IDocsDataTypeItem;
 }
 
+/**
+ * Ycs docs
+ */
 export interface IDocs {
+  /**
+   * Path to append to router
+   */
   path: string;
+
+  /**
+   * HTTP methods
+   */
   methods: ['post' | 'get' | 'put' | 'patch' | 'delete'];
+
+  /**
+   * Controller function
+   */
   controller: (ctx: any) => Promise<any>;
+
+  /**
+   * Authentication
+   */
   auth?: {
+    /**
+     * Auth type
+     */
     type: 'isAuthenticated' | 'owns' | 'hasRoles' | 'ownsOrHasRoles';
+
+    /**
+     * Required when type is hasRoles or ownsOrHasRoles
+     */
     roles?: string[];
   };
+
+  /**
+   * Swagger ui tags
+   */
   tags: string[];
+
+  /**
+   * Swagger ui summary
+   */
   summary?: string;
+
+  /**
+   * Swagger ui description
+   */
   description?: string;
+
+  /**
+   * Swagger ui consumes
+   */
   consumes?: IDocsAccept[];
+
+  /**
+   * Swagger ui consumes
+   */
   produces?: IDocsAccept[];
+
+  /**
+   * Swagger ui parameters
+   */
   parameters?: IDocsParameter[];
+
+  /**
+   * Swagger ui responses
+   */
   responses: {
     [index: string]: {
       description: string;
@@ -209,7 +350,13 @@ export interface IDocs {
   };
 }
 
-export function model2Schema(model): IDocsDataTypeItem {
+/**
+ * Convert mongoose paginate model to Swagger ui schema
+ * @param model {IModel} Ycs model
+ */
+export function model2Schema(
+  model: mongoose.PaginateModel<mongoose.Document>
+): IDocsDataTypeItem {
   return mm2ssd(model, 'xml');
 }
 
@@ -288,3 +435,81 @@ const RESPONSE_4XX = {
 const RESPONSE_5XX = {
   description: 'Server side errors',
 };
+
+export interface IConfig {
+  /**
+   * Swagger ui path
+   */
+  path: string;
+
+  /**
+   * Swagger ui options
+   */
+  options: {
+    /**
+     * Swagger ui version
+     * @example
+     * '2.0'
+     */
+    swagger: string;
+
+    /**
+     * Swagger ui info
+     */
+    info: {
+      title: string;
+      description: string;
+
+      /**
+       * Document version
+       */
+      version: string;
+      contact: {
+        email: string;
+      };
+
+      /**
+       * license
+       */
+      license?: {
+        /**
+         * @example
+         * Apache 2.0
+         */
+        name: string;
+
+        /**
+         * @example
+         * http://www.apache.org/licenses/LICENSE-2.0.html
+         */
+        url: string;
+      };
+    };
+
+    /**
+     * Server host name
+     * @example
+     * example.com:8080
+     */
+    host: string;
+
+    /**
+     * Schemes
+     * @example
+     * ['http', 'https']
+     */
+    schemes: string[];
+
+    /**
+     * Swagger ui base path
+     * @example
+     * '/'
+     */
+    basePath: string;
+
+    /**
+     * Swagger ui produces
+     */
+    produces: IDocsAccept[];
+  };
+}

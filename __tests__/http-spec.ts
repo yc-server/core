@@ -1,4 +1,4 @@
-import { setup, setupSocketIo } from '../src/http';
+import { setup } from '../src/http';
 import * as http from 'http';
 
 // 1. test http
@@ -47,8 +47,8 @@ test('it sould run socket', async () => {
     dirname: __dirname,
     config: {
       http: {
-        socket : {
-          onConnection: true
+        socket: {
+          onConnection: true,
         },
       },
       domain: 'test.com',
