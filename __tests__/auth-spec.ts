@@ -9,7 +9,8 @@ describe('AuthModel', () => {
           errors: {
             empty_username: 'Username cannot be blank',
             empty_password: 'Password cannot be blank',
-            username_already_in_use: 'The specified username is already in use.',
+            username_already_in_use:
+              'The specified username is already in use.',
             username_not_registered: '该用户名未注册成为管理员.',
             invalid_password: 'Invalid password',
             unauthorized: 'Unauthorized',
@@ -20,7 +21,7 @@ describe('AuthModel', () => {
         secret: 'This is a secret',
         enableSimpleAuth: true,
         defaultRoles: ['user', 'admin', 'super'],
-      }
+      },
     });
     auth.setup(app);
   });
@@ -30,16 +31,20 @@ describe('AuthModel', () => {
   });
 
   it('should get token', () => {
-    expect(auth.getHeaderToken({ headers: { authorization: 'xxx'}} as any)).toBe(null);
+    expect(
+      auth.getHeaderToken({ headers: { authorization: 'xxx' } } as any)
+    ).toBe(null);
     expect(auth.getHeaderToken({ headers: {} } as any)).toBe(null);
-    expect(auth.getHeaderToken({ headers: { authorization: 'Bearer xxx'}} as any)).toBe('xxx');
+    expect(
+      auth.getHeaderToken({ headers: { authorization: 'Bearer xxx' } } as any)
+    ).toBe('xxx');
   });
 
   it('should sign token', async () => {
     const doc = { _id: 1 };
-    const signed = auth.signToken(doc as any, {})
+    const signed = auth.signToken(doc as any, {});
     const verified = await auth.verifyToken(signed);
     expect(signed).toMatch(/^eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9/);
     expect(verified).toMatchObject(doc);
-  })
+  });
 });
