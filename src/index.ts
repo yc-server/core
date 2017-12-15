@@ -31,16 +31,6 @@ export interface IConfig {
   domain: string;
 
   /**
-   *  cors
-   */
-  cors?: ICorsConfig;
-
-  /**
-   * http config
-   */
-  http?: IHttpConfig;
-
-  /**
    * mongodb config
    */
   mongodb: IMongodbConfig;
@@ -61,12 +51,22 @@ export interface IConfig {
   statics: IStaticsConfig[];
 
   /**
+   * http config
+   */
+  http?: IHttpConfig;
+
+  /**
    * spdy config
    */
   spdy?: ISpdyConfig;
 
   /**
+   *  cors
+   */
+  cors?: ICorsConfig;
+
+  /**
    * socketio config
    */
-  socket: ISocketConfig;
+  socket?: ISocketConfig;
 }

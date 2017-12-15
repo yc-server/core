@@ -493,6 +493,105 @@ describe('test class DocSchema', () => {
         },
       },
     });
+    expect(docSchema.bodyWithOptions({})).toMatchObject({
+      in: 'body',
+      name: 'body',
+      schema: {
+        properties: {
+          __auth: {
+            required: true,
+            type: 'string',
+          },
+          __v: {
+            format: 'int64',
+            required: false,
+            type: 'integer',
+          },
+          _id: {
+            required: false,
+            type: 'string',
+          },
+          info: {
+            required: false,
+            type: 'string',
+          },
+          name: {
+            required: false,
+            type: 'string',
+          },
+        },
+        required: ['__auth'],
+        type: 'object',
+        xml: {
+          name: 'xml',
+        },
+      },
+    });
+    expect(docSchema.bodyWithOptions({ select: 'name info' })).toMatchObject({
+      in: 'body',
+      name: 'body',
+      schema: {
+        properties: {
+          info: {
+            required: false,
+            type: 'string',
+          },
+          name: {
+            required: false,
+            type: 'string',
+          },
+        },
+        required: ['__auth'],
+        type: 'object',
+        xml: {
+          name: 'xml',
+        },
+      },
+    });
+    expect(docSchema.bodyWithOptions({ select: 'name  info' })).toMatchObject({
+      in: 'body',
+      name: 'body',
+      schema: {
+        properties: {
+          info: {
+            required: false,
+            type: 'string',
+          },
+          name: {
+            required: false,
+            type: 'string',
+          },
+        },
+        required: ['__auth'],
+        type: 'object',
+        xml: {
+          name: 'xml',
+        },
+      },
+    });
+    expect(
+      docSchema.bodyWithOptions({ exclude: '__auth __v  _id', extras: {} })
+    ).toMatchObject({
+      in: 'body',
+      name: 'body',
+      schema: {
+        properties: {
+          info: {
+            required: false,
+            type: 'string',
+          },
+          name: {
+            required: false,
+            type: 'string',
+          },
+        },
+        required: ['__auth'],
+        type: 'object',
+        xml: {
+          name: 'xml',
+        },
+      },
+    });
     // 10.2 body is true
     const model10 = Model({
       auth: true,

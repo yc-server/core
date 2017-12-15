@@ -174,6 +174,28 @@ export class DocSchema {
   }
 
   /**
+   * Body whit options
+   */
+  public bodyWithOptions = (options: IResultOptions): IDocsParameter => {
+    const schema = lodash.merge({}, this.body.schema);
+    const body = lodash.merge({}, this.body);
+    const properties = schema.properties;
+    if (typeof options.select === 'string') {
+      schema.properties = {};
+      for (const k of options.select.split(' ')) {
+        if (k) schema.properties[k] = properties[k];
+      }
+    } else if (typeof options.exclude === 'string') {
+      for (const k of options.exclude.split(' ')) {
+        if (k) delete schema.properties[k];
+      }
+    }
+    if (options.extras) lodash.merge(schema.properties, options.extras);
+    body.schema = schema;
+    return body;
+  };
+
+  /**
    * 4xx results
    */
   get response4xx() {

@@ -1,7 +1,7 @@
 const fs: any = jest.genMockFromModule('fs');
 
 export function existsSync(f: string) {
-  return true;
+  return f.startsWith('E/');
 }
 
 export function readdir(f: string, cb: (err: NodeJS.ErrnoException, files: string[]) => void) {
@@ -12,9 +12,8 @@ export function readdir(f: string, cb: (err: NodeJS.ErrnoException, files: strin
 }
 
 export function stat(f: string, cb: (err: NodeJS.ErrnoException, stat: any) => void) {
-  console.log('>>>', f);
   cb(null, {
-    isFile: () => f.startsWith('E/plugins/F')
+    isFile: () => f.startsWith('E/plugins/bookmark') || f.startsWith('E/plugins/err')
   });
 }
 

@@ -2,6 +2,7 @@ import { Ycs } from '../src/app';
 import * as auth from '../src/auth';
 
 describe('AuthModel', () => {
+  let use;
   beforeAll(() => {
     const app = Ycs.create('hi', {
       auth: {
@@ -23,6 +24,8 @@ describe('AuthModel', () => {
         defaultRoles: ['user', 'admin', 'super'],
       },
     });
+    const back = (app as any).use;
+    (app as any).use = x => (use = x);
     auth.setup(app);
   });
 
@@ -46,5 +49,10 @@ describe('AuthModel', () => {
     const verified = await auth.verifyToken(signed);
     expect(signed).toMatch(/^eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9/);
     expect(verified).toMatchObject(doc);
+  });
+
+  it('should call app use', async () => {
+    use({ headers: { authorization: 'xxx' } }, () => Promise.resolve());
+    expect(1).toBe(1);
   });
 });
