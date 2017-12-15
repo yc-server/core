@@ -9,17 +9,48 @@ import * as redis from 'socket.io-redis';
 
 let io: SocketIO.Server;
 
+/**
+ * Socket class
+ * 
+ * To use this, just create a file named socket.ts in your api directory. 
+ * Paste following code to the file.
+ * ```ts
+ * import { Socket } from '@ycs/core/lib/socket';
+ * 
+ * export default new Socket('room_name_here');
+ * ```
+ * 
+ * To emit a event
+ * ```ts
+ * import socket from './socket';
+ * 
+ * socket.emit('event:name', 'some text');
+ * ```
+ */
 export class Socket {
   private room: string;
 
+  /**
+   * Creating a socket object
+   * @param room {string} room name
+   */
   constructor(room: string) {
     this.room = room;
   }
 
+  /**
+   * Adding socket to the room
+   * @param socket {SocketIO.Socket} socket
+   */
   public register(socket: SocketIO.Socket): void {
     socket.join(this.room);
   }
 
+  /**
+   * Emitting event to all members in the room
+   * @param event {string} event name
+   * @param args {any[]} something
+   */
   public emit(event: string, ...args: any[]) {
     io.of('/').to(this.room).emit(event, ...args);
   }
@@ -46,7 +77,7 @@ export async function setup(app: Ycs) {
 
   const port = config.startPort + ~~process.env.pm_id;
   io = IO(port);
-  io.adapter(redis({ host: config.redis.host, port: config.redis.port }));
+  io.adapter(redis(config.redis));
   io.on('connection', socket => {
     if (config.onConnection) {
       config.onConnection(socket);
@@ -68,11 +99,24 @@ export async function setup(app: Ycs) {
 }
 
 export interface IConfig {
+  /**
+   * Socket first port.
+   * If you run app in pm2 with 4 cores, the actual ports will be startPort, startPort + 1, startPort + 2, startPort + 3
+   */
   startPort: number;
-  redis: {
-    host: string;
-    port: number;
-  };
+
+  /**
+   * redis options
+   */
+  redis: SocketIORedis.SocketIORedisOptions;
+
+  /**
+   * Doing some stuff on connection
+   */
   onConnection?: (socket: SocketIO.Socket) => void;
+
+  /**
+   * Doing some stuff on disconnect
+   */
   onDisconnect?: (socket: SocketIO.Socket) => void;
 }

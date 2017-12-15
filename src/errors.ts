@@ -3,8 +3,17 @@ import * as colors from 'colors/safe';
 import * as moment from 'moment';
 import { IContext } from './context';
 
+/**
+ * 422 bad data errors
+ */
 const BadDataErrors = ['CastError', 'ValidationError', 'SyntaxError'];
 
+/**
+ * Generating error output
+ * @param ctx {IContext} Ycs context
+ * @param error {any} Error object ob Boom object
+ * @param statusCode {number} error status code
+ */
 export function handleError(
   ctx: IContext,
   error: any,
@@ -35,4 +44,7 @@ export function handleError(
   ctx.body = be.output.payload;
 }
 
+/**
+ * ref to boom
+ */
 export const Boom = boom;

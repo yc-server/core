@@ -110,11 +110,23 @@ export async function setup(app: Ycs) {
   }
 }
 
+/**
+ * Ycs Router
+ */
 export class Router {
   public docs: any;
+
+  /**
+   * Ycs model
+   */
   public model: IModel;
   private __router: KRouter;
   private __prefix: string;
+
+  /**
+   * Creating a router
+   * @param path {string} The router path
+   */
   constructor(path: string) {
     this.__prefix = path;
     this.__router = new KRouter({
@@ -122,6 +134,10 @@ export class Router {
     });
   }
 
+  /**
+   * Generating routers and docs
+   * @param docs {IDocs} documents
+   */
   public paths(...docs: IDocs[]): Router {
     for (const path of docs) {
       for (const method of path.methods) {
@@ -172,6 +188,9 @@ export class Router {
     return this;
   }
 
+  /**
+   * The koa routes
+   */
   public routes() {
     return this.__router.routes();
   }

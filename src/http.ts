@@ -15,3 +15,10 @@ export async function setup(app: Ycs) {
     )}] HTTP Server started at http://${app.config.domain}:${app.config.port}`
   );
 }
+
+export interface IConfig {
+  /**
+   * Doing some stuff before http server started
+   */
+  preListen?: (server: http.Server) => void;
+}

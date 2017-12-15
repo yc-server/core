@@ -1,5 +1,6 @@
 import { setup } from '../src/plugins';
 
+//  26,27,28,29,30
 test('it should setup a plugin failed', async () => {
   const app: any = {
     dir: '/notExists',
