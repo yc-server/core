@@ -1,6 +1,10 @@
 import { setup } from '../src/plugins';
 import * as mr from 'mock-require';
 import * as fs from 'fs';
+
+console.log = jest.fn();
+console.error = jest.fn();
+
 const ypb: any = require('ycs-plugin-bookmark');
 
 jest.mock('fs');

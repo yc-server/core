@@ -1,6 +1,9 @@
 import { setup } from '../src/spdy';
 import * as spdy from 'spdy';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 test('it sould not run spdy', async () => {
   const app: any = {
     config: {

@@ -1,6 +1,9 @@
 import { handleError } from '../src/errors';
 import * as boom from 'boom';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 test('it should handle boom', () => {
   const err = boom.badData();
   const ctx: any = {};

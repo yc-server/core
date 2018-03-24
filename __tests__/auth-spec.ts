@@ -1,6 +1,9 @@
 import { Ycs } from '../src/app';
 import * as auth from '../src/auth';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('AuthModel', () => {
   let use;
   beforeAll(() => {

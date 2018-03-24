@@ -1,6 +1,9 @@
 import { DocSchema, IDocsParameter } from '../src/docs';
 import { Model, Schema } from '../src/db';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('test class DocSchema', () => {
   const model = Model({
     auth: true,

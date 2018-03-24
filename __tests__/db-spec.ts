@@ -2,6 +2,9 @@ import { Mongoose, Model, Schema, patchUpdates } from '../src/db';
 import { setup as setupMongodb } from '../src/mongodb';
 import { DocSchema, IDocs } from '../src/docs';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('test crud', () => {
   beforeAll(() => {});
 

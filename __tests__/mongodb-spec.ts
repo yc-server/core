@@ -2,6 +2,9 @@ import { setup } from '../src/mongodb';
 import { Mongoose } from '../src/db';
 import * as mocker from './mock';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('test mongodb', () => {
   const backup = {
     connect: Mongoose.connect,

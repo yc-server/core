@@ -5,7 +5,19 @@ import { Ycs } from '../src/app';
 import { IContext } from '../src/context';
 import { response } from '../src/response';
 import { handleError } from '../src/errors';
-import { AuthModel } from '../src/auth';
+import  * as auth from '../src/auth';
+
+console.log = jest.fn();
+console.error = jest.fn();
+
+jest.mock('../src/auth.ts', () => {
+  return {
+    isAuthenticated: jest.fn(),
+    owns: jest.fn(),
+    hasRoles: jest.fn(),
+    ownsOrHasRoles: jest.fn(),
+  };
+});
 
 // 331,332,334
 
@@ -54,6 +66,7 @@ describe('test module routers', () => {
     // 1.3  paths(...docs: IDocs[]) have params with auth
     // ??? auth的问题
     // TypeError: auth_1.ownsOrHasRoles is not a function
+    // (auth as any).isAuthenticated.mockImplementation(() => jest.fn().mockImplementation(() => true));
     // const docs3: IDocs[] = [
     //   {
     //     path: '/',

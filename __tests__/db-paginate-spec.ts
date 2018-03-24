@@ -1,5 +1,8 @@
 import { Model, Schema, paginate } from '../src/db';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('test paginate', () => {
   let model: any;
 

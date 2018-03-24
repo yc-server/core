@@ -1,5 +1,8 @@
 import { Model, Schema, show } from '../src/db';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 describe('test show', () => {
   let model: any;
 

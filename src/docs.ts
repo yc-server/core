@@ -309,7 +309,7 @@ export interface IDocs {
   /**
    * HTTP methods
    */
-  methods: ['post' | 'get' | 'put' | 'patch' | 'delete'];
+  methods: Array<'post' | 'get' | 'put' | 'patch' | 'delete'>;
 
   /**
    * Controller function

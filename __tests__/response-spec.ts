@@ -1,6 +1,9 @@
 import { response } from '../src/response';
 import { Js2Xml } from 'js2xml';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 test('is should response without body', () => {
   const ctx: any = {
     headers: {

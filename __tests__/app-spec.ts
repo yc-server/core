@@ -1,53 +1,41 @@
 import { Ycs } from '../src/app';
-import * as mr from 'mock-require';
+
+console.log = jest.fn();
+console.error = jest.fn();
 
 jest.mock(`../src/auth.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup auth called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/http.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup http called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/spdy.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup spdy called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/socket.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup socket called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/mongodb.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup mongodb called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/plugins.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup plugins called');
-    },
+    setup: jest.fn(),
   };
 });
 jest.mock(`../src/routers.ts`, () => {
   return {
-    setup: () => {
-      console.log('setup routers called');
-    },
+    setup: jest.fn(),
   };
 });
 

@@ -1,6 +1,9 @@
 import { setup } from '../src/http';
 import * as http from 'http';
 
+console.log = jest.fn();
+console.error = jest.fn();
+
 // 1. test http
 // 1.1 test run http with preListen
 test('it sould run http', async () => {
