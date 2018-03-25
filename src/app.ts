@@ -1,7 +1,7 @@
 import * as koa from 'koa';
 import * as body from 'koa-better-body';
 import * as compress from 'koa-compress';
-import * as cors from 'koa-cors';
+import * as cors from '@koa/cors';
 import * as conditional from 'koa-conditional-get';
 import * as convert from 'koa-convert';
 import * as etag from 'koa-etag';
@@ -75,7 +75,7 @@ export class Ycs extends koa {
     await setupMongodb(this);
 
     this.use(logger());
-    if (this.config.cors) this.use(convert(cors(this.config.cors)));
+    if (this.config.cors) this.use(cors(this.config.cors));
     this.use(
       convert(
         body({
