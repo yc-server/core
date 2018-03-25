@@ -5,7 +5,7 @@ import { Ycs } from '../src/app';
 import { IContext } from '../src/context';
 import { response } from '../src/response';
 import { handleError } from '../src/errors';
-import  * as auth from '../src/auth';
+import * as auth from '../src/auth';
 
 console.log = jest.fn();
 console.error = jest.fn();
