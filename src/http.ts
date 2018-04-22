@@ -3,10 +3,15 @@ import * as http from 'http';
 import * as moment from 'moment';
 import { Ycs } from './app';
 
+export const preListenActions = [];
+
 export async function setup(app: Ycs) {
   const server = http.createServer(app.callback());
   if (app.config.http && app.config.http.preListen) {
     app.config.http.preListen(server);
+  }
+  for (const action of preListenActions) {
+    action(server);
   }
   server.listen(app.config.port);
   console.log(
