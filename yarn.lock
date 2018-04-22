@@ -130,15 +130,21 @@
   dependencies:
     "@types/node" "*"
 
-"@types/socket.io-redis@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.npmjs.org/@types/socket.io-redis/-/socket.io-redis-1.0.22.tgz#8ac6680a2876ae8e2a3c766079f7702c2f164461"
+"@types/socket.io-redis@^1.0.25":
+  version "1.0.25"
+  resolved "https://registry.npmjs.org/@types/socket.io-redis/-/socket.io-redis-1.0.25.tgz#ad525e19a1d745f01d8e3a92f9bb259e4028eeb4"
   dependencies:
     "@types/socket.io" "*"
 
-"@types/socket.io@*", "@types/socket.io@^1.4.31":
+"@types/socket.io@*":
   version "1.4.31"
   resolved "http://r.cnpmjs.org/@types/socket.io/download/@types/socket.io-1.4.31.tgz#7a928518a35516fccd90431f94538ed3fddaba19"
+  dependencies:
+    "@types/node" "*"
+
+"@types/socket.io@^1.4.33":
+  version "1.4.33"
+  resolved "https://registry.npmjs.org/@types/socket.io/-/socket.io-1.4.33.tgz#41e7e30e858b643519a139b8c93280390ccdff8d"
   dependencies:
     "@types/node" "*"
 
