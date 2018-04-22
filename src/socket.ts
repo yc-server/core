@@ -108,7 +108,7 @@ export interface IConfig {
   /**
    * redis options
    */
-  redis: SocketIORedis.SocketIORedisOptions;
+  redis: redis.SocketIORedisOptions;
 
   /**
    * Doing some stuff on connection
