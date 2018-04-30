@@ -78,7 +78,7 @@ export async function setup(app: Ycs) {
   /**
    * Pre-save hook
    */
-  AuthSchema.pre('validate', async function (next) {
+  AuthSchema.pre('validate', async function(next) {
     // Handle new/update passwords
     if (!this.isModified('password')) return next();
 
