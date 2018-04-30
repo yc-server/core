@@ -10,6 +10,7 @@ import * as path from 'path';
 import { promisify } from 'typed-promisify';
 import { Ycs } from './app';
 import {
+  attach,
   AuthModel,
   hasRoles,
   isAuthenticated,
@@ -157,6 +158,9 @@ export class Router {
         if (path.auth) {
           let midware;
           switch (path.auth.type) {
+            case 'attach':
+              midware = attach();
+              break;
             case 'isAuthenticated':
               midware = isAuthenticated();
               break;
@@ -170,7 +174,7 @@ export class Router {
               midware = ownsOrHasRoles(this.model, ...path.auth.roles);
               break;
             default:
-              midware = isAuthenticated();
+              midware = attach();
           }
           this.__router[method](path.path, midware, path.controller);
           this.docs[prefix][method].security = [{ Bearer: [] }];

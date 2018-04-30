@@ -193,6 +193,23 @@ export async function setup(app: Ycs) {
     });
   };
 
+  attach = () => {
+    return async (ctx: IContext, next) => {
+      try {
+        if (ctx.request.auth) {
+          const auth = await AuthModel.findById(ctx.request.auth._id).exec();
+          if (!auth)
+            throw boom.notAcceptable(
+              app.config.auth.messages.errors.invalid_token
+            );
+        }
+        await next();
+      } catch (e) {
+        handleError(ctx, e);
+      }
+    };
+  };
+
   isAuthenticated = () => {
     return async (ctx: IContext, next) => {
       try {
@@ -317,6 +334,11 @@ export function getHeaderToken(ctx: IContext): string {
     return null;
   return ctx.headers.authorization.substring(7);
 }
+
+/**
+ * Middleware to attach auth info.
+ */
+export let attach: () => any;
 
 /**
  * Middleware to check if it is authenticated.
