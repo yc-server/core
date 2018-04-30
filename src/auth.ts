@@ -78,7 +78,7 @@ export async function setup(app: Ycs) {
   /**
    * Pre-save hook
    */
-  AuthSchema.pre('validate', async function(next) {
+  AuthSchema.pre('validate', async function (next) {
     // Handle new/update passwords
     if (!this.isModified('password')) return next();
 
@@ -191,6 +191,23 @@ export async function setup(app: Ycs) {
         resolve(decoded);
       });
     });
+  };
+
+  attach = () => {
+    return async (ctx: IContext, next) => {
+      try {
+        if (ctx.request.auth) {
+          const auth = await AuthModel.findById(ctx.request.auth._id).exec();
+          if (!auth)
+            throw boom.notAcceptable(
+              app.config.auth.messages.errors.invalid_token
+            );
+        }
+        await next();
+      } catch (e) {
+        handleError(ctx, e);
+      }
+    };
   };
 
   isAuthenticated = () => {
@@ -317,6 +334,11 @@ export function getHeaderToken(ctx: IContext): string {
     return null;
   return ctx.headers.authorization.substring(7);
 }
+
+/**
+ * Middleware to attach auth info.
+ */
+export let attach: () => any;
 
 /**
  * Middleware to check if it is authenticated.

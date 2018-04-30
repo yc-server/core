@@ -323,7 +323,7 @@ export interface IDocs {
     /**
      * Auth type
      */
-    type: 'isAuthenticated' | 'owns' | 'hasRoles' | 'ownsOrHasRoles';
+    type?: 'attach' | 'isAuthenticated' | 'owns' | 'hasRoles' | 'ownsOrHasRoles';
 
     /**
      * Required when type is hasRoles or ownsOrHasRoles
