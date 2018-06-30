@@ -177,6 +177,7 @@ export async function setup(app: Ycs) {
         _id: doc._id,
         providers: doc['providers'],
         roles: doc['roles'],
+        username: doc['username'],
       },
       app.config.auth.secret,
       options
