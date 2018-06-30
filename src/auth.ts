@@ -2,8 +2,8 @@ import * as boom from 'boom';
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import * as compose from 'koa-compose';
-import * as lodash from 'lodash';
 import * as mongoose from 'mongoose';
+import * as mongoosePaginate from 'mongoose-paginate';
 import * as uniqueValidator from 'mongoose-unique-validator';
 import { Ycs } from './app';
 import { IContext } from './context';
@@ -67,6 +67,8 @@ export async function setup(app: Ycs) {
   ).plugin(uniqueValidator, {
     mesages: app.config.auth.messages.errors.username_already_in_use,
   });
+
+  AuthSchema.plugin(mongoosePaginate);
 
   AuthSchema['options'].toJSON = {
     transform(doc, ret, options) {
