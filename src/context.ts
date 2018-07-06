@@ -41,6 +41,11 @@ export interface IRequest extends Request {
      * Wheather owns the document or not
      */
     owns: boolean;
+
+    /**
+     * username
+     */
+    username: string;
   };
 
   /**
