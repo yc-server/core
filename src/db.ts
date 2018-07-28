@@ -26,6 +26,11 @@ export interface IModelOptions {
   name: string;
 
   /**
+   * discriminator
+   */
+  discriminator?: any;
+
+  /**
    * Same as mongoose schema
    */
   schema: mongoose.Schema;
@@ -57,12 +62,19 @@ export function Model(options: IModelOptions): IModel {
     },
   });
   options.schema.plugin(mongoosePaginate);
-  const model = mongoose.model(
-    options.name,
-    options.schema,
-    options.collection,
-    options.skipInit
-  );
+
+  let model;
+
+  if (options.discriminator) {
+    model = options.discriminator.discriminator(options.name, options.schema);
+  } else {
+    model = mongoose.model(
+      options.name,
+      options.schema,
+      options.collection,
+      options.skipInit
+    );
+  }
   model['docSchema'] = new DocSchema(model);
   model['routes'] = (prefix, ...paths) => {
     const router = new Router(prefix);
