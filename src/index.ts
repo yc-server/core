@@ -69,4 +69,10 @@ export interface IConfig {
    * socketio config
    */
   socket?: ISocketConfig;
+
+  jsonLimit?: string;
+  textLimit?: string;
+  formLimit?: string;
+  urlencodedLimit?: string;
+  bufferLimit?: string;
 }

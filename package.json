@@ -1,6 +1,6 @@
 {
   "name": "@ycs/core",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Simple restful framework using node and typescript",
   "license": "MIT",
   "repository": "https://github.com/yc-server/core.git",

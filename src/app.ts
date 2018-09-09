@@ -79,6 +79,11 @@ export class Ycs extends koa {
     this.use(
       convert(
         body({
+          jsonLimit: this.config.jsonLimit || '100kb',
+          textLimit: this.config.textLimit || '100kb',
+          formLimit: this.config.formLimit || '100kb',
+          urlencodedLimit: this.config.urlencodedLimit || '100kb',
+          bufferLimit: this.config.bufferLimit || '1mb',
           extendTypes: {
             custom: ['text/xml', 'application/xml'],
           },
